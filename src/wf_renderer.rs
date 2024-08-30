@@ -274,13 +274,11 @@ impl render_graph::Node for WaterfallNode {
         match self.state {
             WaterfallShaderState::Loading => {}
             WaterfallShaderState::Working => {
-                let pipeline = pipeline_cache
-                    .get_compute_pipeline(pipeline.pipeline)
-                    .unwrap();
-
-                pass.set_bind_group(0, bind_group, &[]);
-                pass.set_pipeline(pipeline);
-                pass.dispatch_workgroups(1, 1, 1);
+                if let Some(pipeline) = pipeline_cache.get_compute_pipeline(pipeline.pipeline) {
+                    pass.set_bind_group(0, bind_group, &[]);
+                    pass.set_pipeline(pipeline);
+                    pass.dispatch_workgroups(1, 1, 1);
+                }
             }
         }
 
